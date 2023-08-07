@@ -1,23 +1,18 @@
 package routes
 
 import (
-	"go-api-rest/controllers"
-	"go-api-rest/middleware"
-	"log"
-	"net/http"
-
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
+	"github.com/guilhermeonrails/api-go-gin/controllers"
 )
 
-func HandleRequest() {
-	r := mux.NewRouter()
-	r.Use(middleware.ContentTypeMiddleware)
-	r.HandleFunc("/", controllers.Home)
-	r.HandleFunc("/api/personalidades", controllers.AllPersonalidades).Methods("Get")
-	r.HandleFunc("/api/personalidades/{id}", controllers.OnePersonaidade).Methods("Get")
-	r.HandleFunc("/api/personalidades", controllers.CreateNewPersonalidade).Methods("Post")
-	r.HandleFunc("/api/personalidades/{id}", controllers.DeletePersonalidade).Methods("Delete")
-	r.HandleFunc("/api/personalidades/{id}", controllers.EditPersonalidade).Methods("Put")
-	log.Fatal(http.ListenAndServe(":3000", handlers.CORS(handlers.AllowedOrigins([]string{"*"}))(r)))
+func HandleRequests() {
+	r := gin.Default()
+	r.GET("/alunos", controllers.ExibeTodosAlunos)
+	r.GET("/:nome", controllers.Saudacao)
+	r.POST("/alunos", controllers.CriaNovoAluno)
+	r.GET("/alunos/:id", controllers.BuscaAlunoPorID)
+	r.DELETE("/alunos/:id", controllers.DeletaAluno)
+	r.PATCH("/alunos/:id", controllers.EditaAluno)
+	r.GET("/alunos/cpf/:cpf", controllers.BuscaAlunoPorCPF)
+	r.Run()
 }
